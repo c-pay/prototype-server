@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico"/>
+    <title>HashFactory</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/dist/js/bootstrap.min.js"></script>
+    <script src="/dist/js/bootstrap-toggle.js"></script>
+    <script src="/assets/js/docs.min.js"></script>
+    <!-- Bootstrap core CSS -->
+    <link href="/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/dist/css/bootstrap-toggle.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+
+        <form method="post" name="shop_form" id="shop_form" action="/add_item" role="form">
+            <div class="form-group">
+                <input class="form-control" type="hidden" id="id" name="id" th:value="${id}" required/>
+                <label for="title">Title</label>
+                <input class="form-control" id="title" name="title" required/>
+                <br/>
+                <label for="price">price (wei)</label>
+                <input class="form-control" id="price" name="price" required/>
+            </div>
+            <button type="submit" id="submit" class="btn btn-primary">Добавить</button>
+        </form>
+
+
+
+
+
+
+</div>
+</div>
+
+
+</body>
+</html>

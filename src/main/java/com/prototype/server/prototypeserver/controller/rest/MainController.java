@@ -1,15 +1,22 @@
 package com.prototype.server.prototypeserver.controller.rest;
 
 import com.prototype.server.prototypeserver.controller.rest.dto.AdvertDTO;
+import com.prototype.server.prototypeserver.controller.rest.dto.ItemDTO;
+import com.prototype.server.prototypeserver.controller.rest.dto.TransactionDTO;
 import com.prototype.server.prototypeserver.entity.Advert;
+import com.prototype.server.prototypeserver.entity.Item;
 import com.prototype.server.prototypeserver.entity.Transaction;
 import com.prototype.server.prototypeserver.service.AdvertService;
 import com.prototype.server.prototypeserver.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @RestController("/")
 @CrossOrigin
@@ -37,25 +44,37 @@ public class MainController {
             advertService.getTestEth(address);
     }
 
-    @RequestMapping(value = "/savetransaction/{blockNumber}/{transactionIndex}/{from}/{to}/{value}/{hashTx}", method = RequestMethod.GET)
-//    @RequestMapping(value = "/savetransaction/{blockNumber}", method = RequestMethod.GET)
-    public void saveTransaction(@PathVariable long blockNumber
-            , @PathVariable long transactionIndex
-            , @PathVariable String from
+    @RequestMapping(value = "/savetransaction/{from}/{to}/{value}/{hashTx}", method = RequestMethod.GET)
+    public void saveTransaction(@PathVariable String from
             , @PathVariable String to
             , @PathVariable String value
             , @PathVariable String hashTx) {
         Transaction transaction = new Transaction();
-        transaction.setBlockNumber(blockNumber);
-        transaction.setTransactionIndex(transactionIndex);
         transaction.setFromAddress(from);
         transaction.setToAddress(to);
         transaction.setValue(value);
         transaction.setHashTx(hashTx);
+        SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
+        transaction.setDateTx(formatter1.format(new Date()));
         transactionService.saveTransaction(transaction);
 
     }
 
+
+    @RequestMapping(value = "/findalltransactionbyaddress/{address}", method = RequestMethod.GET)
+    public TransactionDTO findalltransactionbyaddress(@PathVariable String address) {
+        if (!address.isEmpty()) {
+            return new TransactionDTO(transactionService.findAllTransactionByAddress(address));
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/findallitembyid/{id}", method = RequestMethod.GET)
+    public ItemDTO findallitembyid(@PathVariable long id) {
+        List<Item> items = advertService.findByAdvert(id);
+
+        return new ItemDTO(items);
+    }
 //    @RequestMapping(value = "/test", method = RequestMethod.GET)
 //    public List<AdvertDTO> test() {
 //        ArrayList<AdvertDTO> list = new ArrayList<>();

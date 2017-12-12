@@ -1,7 +1,9 @@
 package com.prototype.server.prototypeserver.service;
 
 import com.prototype.server.prototypeserver.entity.Advert;
+import com.prototype.server.prototypeserver.entity.Item;
 import com.prototype.server.prototypeserver.repository.AdvertRepository;
+import com.prototype.server.prototypeserver.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,9 @@ public class AdvertService {
 
     @Autowired
     private AdvertRepository advertRepository;
+
+    @Autowired
+    private ItemRepository itemRepository;
 
     public List<Advert> findAll(){
         return advertRepository.findAll();
@@ -61,4 +66,22 @@ public class AdvertService {
         }
     }
 
+    public Advert findById(long id){
+        return advertRepository.findOne(id);
+
+    }
+
+    public Advert saveAdvert(Advert advert){
+        return advertRepository.saveAndFlush(advert);
+    }
+
+    public Item saveItem(Item item){
+        return itemRepository.saveAndFlush(item);
+    }
+    public List<Item> findByAdvert(long id){
+        return itemRepository.findByAdvert(id);
+    }
+    public List<Item> findByAdvertLight(long id){
+        return itemRepository.findByAdvertLight(id);
+    }
 }

@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+
+    <title>Justified Nav Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/dist/css/justified-nav.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="masthead">
+        <h3 class="text-muted">Project name</h3>
+        <ul class="nav nav-justified">
+            <li class="active"><a href="/">Home</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Downloads</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </div>
+
+<div class="row">
+    <div class="col-md-2 col-sm-2"></div>
+    <div class="col-md-8 col-sm-8">
+    <br/>
+    <h2  class="text-center" th:text="${advert.title}"></h2>   <br/><br/>
+    <div class="text-center"><img th:src="'/image/'+${advert.id}" height="60%" width="60%"></div>
+        <br/><br/>
+    <p th:text="${advert.description}"></p>
+    <table class="table table-striped" id="posts_list">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Price</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr data-th-each="item : ${items}">
+            <td class="message" data-th-text="${item.title}"></td>
+            <td class="message" data-th-text="${item.price}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <br/><br/>
+    <a class="btn btn-primary pull-right" th:href="'/add_item/'+${advert.id}">Добавить</a>
+    </div>
+</div>
+
+</div> <!-- /container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+</body>
+</html>

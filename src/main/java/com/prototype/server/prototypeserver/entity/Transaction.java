@@ -17,13 +17,9 @@ public class Transaction {
     @Column(name="id")
     private long id;
 
-    private long nonce;
-    private long blockNumber;
-    private long transactionIndex;
     private String toAddress;
     private String fromAddress;
     private String value;
-    private long gasPrice;
-    private long gas;
     private String hashTx;
+    private String dateTx;
 }

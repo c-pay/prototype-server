@@ -3,14 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="../../assets/ico/favicon.ico"/>
-    <title>HashFactory</title>
+    <title>CCcoin market</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="/dist/js/bootstrap.min.js"></script>
     <script src="/dist/js/bootstrap-toggle.js"></script>
-    <script src="/assets/js/docs.min.js"></script>
+    <script src="/dist/js/docs.min.js"></script>
     <!-- Bootstrap core CSS -->
     <link href="/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="/dist/css/bootstrap-toggle.css" rel="stylesheet">
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
 
@@ -27,6 +33,9 @@
                 <label for="description">Description</label>
                 <input class="form-control" id="description" name="description" required/>
                 <br/>
+                <label for="wallet">Wallet</label>
+                <input class="form-control" id="wallet" name="wallet" required/>
+                <br/>
                 <label for="typeItem">Раздел</label>
                 <select id="typeItem" name="typeItem" class="form-control">
                     <option>Кафе</option>
@@ -35,6 +44,25 @@
                     <option>Прокат</option>
                     <option>Услуги</option>
                 </select><br/>
+                <div id="map"></div>
+                <br/>
+                <label for="address">address</label>
+
+                <div class="input-group">
+                    <input class="form-control" id="address" name="address" required/>
+                    <span class="input-group-btn">
+                      <button class="btn btn-default" type="button" onclick="codeAddress()">Map</button>
+                        </span>
+                </div><!-- /input-group -->
+
+                <br/>
+                <label for="addaddress">addition address</label>
+                <input class="form-control" id="addaddress" name="addaddress"
+                       />
+                <input  type="hidden" class="form-control" id="latitude"
+                       name="latitude"/>
+                <input type="hidden"  class="form-control" id="longitude"
+                       name="longitude"/>
             </div>
             <button type="submit" id="submit" class="btn btn-primary">Добавить</button>
         </form>
@@ -47,6 +75,9 @@
 </div>
 </div>
 
-
 </body>
+<script src="/dist/js/map.js"></script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCysBJYb0rQH-S6MkhknZUu43tROphTw5c&callback=initMap">
+</script>
 </html>

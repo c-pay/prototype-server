@@ -2,10 +2,15 @@ package com.prototype.server.prototypeserver.service;
 
 import com.prototype.server.prototypeserver.entity.Advert;
 import com.prototype.server.prototypeserver.entity.Item;
+import com.prototype.server.prototypeserver.entity.Transaction;
+import com.prototype.server.prototypeserver.entity.User;
 import com.prototype.server.prototypeserver.repository.AdvertRepository;
 import com.prototype.server.prototypeserver.repository.ItemRepository;
+import com.prototype.server.prototypeserver.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
@@ -17,13 +22,18 @@ import org.web3j.utils.Convert;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Service("advertService")
 public class AdvertService {
 
     @Autowired
     private AdvertRepository advertRepository;
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     @Autowired
     private ItemRepository itemRepository;
@@ -32,6 +42,15 @@ public class AdvertService {
         return advertRepository.findAll();
     }
 
+    public void removeItem(Item item){
+        itemRepository.delete(item);
+    }
+
+    public void removeAdvert(Advert advert){
+       advertRepository.delete(advert);
+    }
+
+    private  ResourceLoader resourceLoader;
     public void getTestEth(String address){
         try {
             // We start by creating a new web3j instance to connect to remote nodes on the network.
@@ -41,11 +60,17 @@ public class AdvertService {
                     + web3j.web3ClientVersion().send().getWeb3ClientVersion());
             System.out.println("connect");
             // We then need to load our Ethereum wallet file
+
             // FIXME: Generate a new wallet file using the web3j command line tools https://docs.web3j.io/command_line.html
+//            Resource resource = resourceLoader.getResource("classpath:/path/to/key");
+//            File dbAsFile = resource.getFile();
+//            File file =  new ClassPathResource("static/key").getFile();
+//            File file = resourceLoader.getResource("classpath:key").getFile();
+            File homedir = new File(System.getProperty("user.home"));
             Credentials credentials =
                     WalletUtils.loadCredentials(
                             "123123123",
-                            new File("C:/key"));//TODO заменить на внутренний файл-ключ
+                            new File(homedir, "key"));//TODO заменить на внутренний файл-ключ
             System.out.println("Credentials loaded");
 
             // FIXME: Request some Ether for the Rinkeby test network at https://www.rinkeby.io/#faucet
@@ -61,16 +86,33 @@ public class AdvertService {
             System.out.println("Transaction complete, view it at https://rinkeby.etherscan.io/tx/"
                     + transferReceipt.getTransactionHash());
 
+            Transaction transaction = new Transaction();
+            transaction.setFromAddress(transferReceipt.getFrom());
+            transaction.setToAddress(transferReceipt.getTo());
+            transaction.setValue("1000000000000000000");
+            transaction.setHashTx(transferReceipt.getTransactionHash());
+            SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
+            transaction.setDateTx(formatter1.format(new Date()));
+            transactionRepository.save(transaction);
+
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    public Advert findById(long id){
+    public Advert findAdvertById(long id){
         return advertRepository.findOne(id);
 
     }
 
+    public Item findItemById(long id){
+        return itemRepository.findOne(id);
+
+    }
+    public List<Advert> findAllByUser(User user){
+        return advertRepository.findAllByUser(user);
+
+    }
     public Advert saveAdvert(Advert advert){
         return advertRepository.saveAndFlush(advert);
     }

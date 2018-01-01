@@ -1,10 +1,12 @@
 package com.prototype.server.prototypeserver.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "advert")
@@ -21,5 +23,23 @@ public class Advert {
     private String description;
     @Lob
     private byte[] pic;
+    @JsonIgnore
+    @ManyToOne
+    private User user;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "advert", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Item> items;
+
+    @Column(name="wallet", length = 150, nullable = false)
+    private String wallet;
+
+    @Column(name="address" , length = 300, nullable = true)
+    private String address;
+    @Column(name="add_address" , length = 300, nullable = true)
+    private String addAddress;
+    @Column(name="latitude" , nullable = true)
+    private double latitude;
+    @Column(name="longitude" , nullable = true)
+    private double longitude;
 }

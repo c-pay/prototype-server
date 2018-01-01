@@ -75,12 +75,11 @@ public class MainController {
 
         return new ItemDTO(items);
     }
-//    @RequestMapping(value = "/test", method = RequestMethod.GET)
-//    public List<AdvertDTO> test() {
-//        ArrayList<AdvertDTO> list = new ArrayList<>();
-//        list.add(new AdvertDTO("HELLO WORLD"));
-//        list.add(new AdvertDTO("HELLO WORLD 2"));
-//        list.add(new AdvertDTO("test"));
-//        return list;
-//    }
+
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public void test() {
+
+        System.out.println("ok");
+    }
+
 }

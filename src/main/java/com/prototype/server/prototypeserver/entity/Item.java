@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 
@@ -19,9 +20,10 @@ public class Item {
     private long id;
     @Column(name="title", length = 150, nullable = false)
     private String title;
-    private long price;
+    private float price;
     @JsonIgnore
     @ManyToOne
+    @Cascade(value = {org.hibernate.annotations.CascadeType.DELETE})
     private Advert advert;
 
 

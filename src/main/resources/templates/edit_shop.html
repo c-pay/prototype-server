@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+
+    <title>CCcoin market</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/dist/css/justified-nav.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]>
+    <script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-md-2 col-sm-2"></div>
+        <div class="col-md-8 col-sm-8">
+            <br/>
+            <a href="/list_shop">&larr; list page</a>
+            <br/><br/>
+            <div class="text-center"><img th:src="'/image/'+${advert.id}" height="60%" width="60%"></div>
+            <br/>
+
+            <form method="POST" enctype="multipart/form-data" action="/upload">
+                <div class="pull-center">
+                    <input class="form-control" type="hidden" id="id" name="id" th:value="${advert.id}" required/>
+                    <input type="file" name="file" class="btn btn-mini  btn-primary"
+                           style="display:inline; padding: 2px 1px;"/>
+                    <input type="submit" class="btn btn-mini  btn-primary" style="padding: 2px 3px;"
+                           value="&#128190;"/></div>
+                <br/><br/>
+            </form>
+            <br/>
+            <form method="post" name="shop_form" id="shop_form" action="/update_shop" role="form">
+                <div class="form-group">
+                    <input type="hidden" th:value="${advert.id}" class="form-control" id="id" name="id" required/>
+                    <label for="title">Title</label>
+                    <input th:value="${advert.title}" class="form-control" id="title" name="title" required/>
+                    <br/>
+                    <label for="description">Description</label>
+                    <input th:value="${advert.description}" class="form-control" id="description" name="description"
+                           required/>
+                    <br/>
+                    <label for="wallet">Wallet</label>
+                    <input th:value="${advert.wallet}" class="form-control" id="wallet" name="wallet" required/>
+                    <br/>
+                    <label for="typeItem">Раздел</label>
+                    <select id="typeItem" name="typeItem" class="form-control">
+                        <option>Кафе</option>
+                        <option>Ресторан</option>
+                        <option>Магазин</option>
+                        <option>Прокат</option>
+                        <option>Услуги</option>
+                    </select><br/>
+                    <div id="map"></div>
+                    <br/>
+                    <label for="address">address</label>
+
+                    <div class="input-group">
+                        <input th:value="${advert.address}" class="form-control" id="address" name="address" required/>
+                        <span class="input-group-btn">
+                      <button class="btn btn-default" type="button" onclick="codeAddress()">Map</button>
+                        </span>
+                    </div><!-- /input-group -->
+
+                    <br/>
+                    <label for="addaddress">addition address</label>
+                    <input th:value="${advert.addAddress}" class="form-control" id="addaddress" name="addaddress"
+                          />
+                    <input type="hidden" th:value="${advert.latitude}" class="form-control" id="latitude"
+                           name="latitude"/>
+                    <input type="hidden" th:value="${advert.longitude}" class="form-control" id="longitude"
+                           name="longitude"/>
+                </div>
+
+                <button type="submit" id="submit" class="btn btn-primary pull-right">Save</button>
+            </form>
+
+
+            <table class="table table-striped" id="posts_list">
+                <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>cc€</th>
+                    <th><span class="glyphicon glyphicon-edit"></span></th>
+                    <th><span class="glyphicon glyphicon-floppy-remove"></span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr data-th-each="item : ${items}">
+                    <td class="message" data-th-text="${item.title}"></td>
+                    <td class="message" data-th-text="${item.price}"></td>
+                    <td>cc€</td>
+                    <td class="message"><a th:href="'/add_item/'+${advert.id}+'/'+${item.id}"><span
+                            class="glyphicon glyphicon-edit"></span></a></td>
+                    <td class="message"><a th:href="'/remove_item/'+${advert.id}+'/'+${item.id}"><span
+                            class="glyphicon glyphicon-floppy-remove"></span></a></td>
+                </tr>
+                </tbody>
+            </table>
+            <br/><br/>
+            <a class="btn btn-primary pull-right" th:href="'/add_item/'+${advert.id}+'/0'">Добавить</a>
+            <br/><br/>
+            <br/><br/>
+            <br/><br/>
+        </div>
+
+    </div>
+
+</div> <!-- /container -->
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+</body>
+<script src="/dist/js/map.js"></script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCysBJYb0rQH-S6MkhknZUu43tROphTw5c&callback=initMap">
+</script>
+
+</html>

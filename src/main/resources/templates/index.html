@@ -31,21 +31,34 @@
 <body>
 
 <div class="container">
-
+    <img class = "pull-center" src="/open/logo.jpg" height="20%" width="20%"/>
     <div class="masthead">
-        <h3 class="text-muted">CPay market</h3>
+
+            <h2 >more about us on <a href="http://cpay.click/" alt="cpay.click">cpay.click</a></h2>
+            <!--<a target="_blank" href="https://coinmarketcap.com/currencies/bitcoin/"><b>-->
+                <!--<output th:text="${btc}" th:style="(${btc_rise}?'color:green;':'color:red;')+'padding-top:0px'">-->
+                <!--BTC - 0.0$-->
+                <!--</output>-->
+            <!--</b></a>-->
+
         <ul class="nav nav-justified">
             <li class="active"><a href="/">Home</a></li>
-            <li><a href="/download">Downloads</a></li>
+            <li><a href="https://play.google.com/store/apps/details?id=com.cryptopay.prototype">Download Application</a></li>
             <li><a href="/list_shop">Cabinet</a></li>
         </ul>
+        <br/>
+        <h3 class="text-right"><a target="_blank" href="https://coinmarketcap.com/currencies/ethereum/"><b>
+            <output th:text="${eth}" th:style="(${eth_rise}?'color:green;':'color:red;')+'padding-top:0px'" >
+                ETH - 0.0EUR
+            </output>
+        </b></a></h3>
     </div>
 
     <!-- Jumbotron -->
     <div class="jumbotron">
         <h1>Crypto market place</h1>
-        <p class="lead">New crypto world for easy payment of goods and services around the world</p>
-        <p><a class="btn btn-lg btn-success" href="/add_shop" role="button">Add your market place!</a></p>
+        <p class="lead">New crypto world for easy payment of goods and services around the world</p><br/>
+        <!--<p><a class="btn btn-lg btn-success" href="/add_shop" role="button">Add your market place!</a></p>-->
     </div>
 
     <!-- Example row of columns -->

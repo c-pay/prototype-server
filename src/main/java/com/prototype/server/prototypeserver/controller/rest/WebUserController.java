@@ -39,27 +39,27 @@ public class WebUserController {
 
     @RequestMapping(value = "/sendMail", method = RequestMethod.POST)
     public String sendMail(@RequestParam("name") String name, @RequestParam("mail") String mail, @RequestParam("tel") String tel, @RequestParam("priority") String priority) {
-//        ResponseEntity<String>
-        StringBuilder builder = new StringBuilder();
-        builder.append("<table cellpadding=10 style=\"margin-top:10px; margin-left:10px;\" border=\"1\">");
-        builder.append("<tr><td>Имя</td><td>" + name + "</td></tr>");
-        builder.append("<tr><td >Почта</td><td>" + mail + "</td></tr>");
-        builder.append("<tr><td>Телефон</td><td>" + tel + "</td></tr>");
-        builder.append("<tr><td>Приоритетный способ связи</td><td>" + priority + "</td></tr></table>");
-        mailService.send(name, "info@hashfactory.ru", "Заявка", builder.toString());
-
-        builder = new StringBuilder();
-
-        builder.append("<table cellpadding=15 style='margin-top:10px; margin-left:20px;' border='0'>");
-        builder.append("<tr><td align=center  colspan='2'><a href='www.hashfactory.ru'>logo</a></td></tr>");
-        builder.append("<tr><td align=center ><br/><h2>Приветствуем!</h2>");
-        builder.append("<h3>В ближайшее время мы с вами свяжемся!</h3><br/></td>");
-        builder.append("<td align=center>team2</td></tr>");
-        builder.append("<tr><td></td><td align=right><p>Служба поддежки <a href='mailto:admin@hashactory.ru'>admin@hashactory.ru</a></p>");
-        builder.append("<p>Телефон 8 800 100 5979 (по России бесплатно)</p></td></tr></table>");
-
-        mailService.send(name, mail, "Мы с вами свяжемся!", builder.toString());
-
+////        ResponseEntity<String>
+//        StringBuilder builder = new StringBuilder();
+//        builder.append("<table cellpadding=10 style=\"margin-top:10px; margin-left:10px;\" border=\"1\">");
+//        builder.append("<tr><td>Имя</td><td>" + name + "</td></tr>");
+//        builder.append("<tr><td >Почта</td><td>" + mail + "</td></tr>");
+//        builder.append("<tr><td>Телефон</td><td>" + tel + "</td></tr>");
+//        builder.append("<tr><td>Приоритетный способ связи</td><td>" + priority + "</td></tr></table>");
+//        mailService.send(name, "info@hashfactory.ru", "Заявка", builder.toString());
+//
+//        builder = new StringBuilder();
+//
+//        builder.append("<table cellpadding=15 style='margin-top:10px; margin-left:20px;' border='0'>");
+//        builder.append("<tr><td align=center  colspan='2'><a href='www.hashfactory.ru'>logo</a></td></tr>");
+//        builder.append("<tr><td align=center ><br/><h2>Приветствуем!</h2>");
+//        builder.append("<h3>В ближайшее время мы с вами свяжемся!</h3><br/></td>");
+//        builder.append("<td align=center>team2</td></tr>");
+//        builder.append("<tr><td></td><td align=right><p>Служба поддежки <a href='mailto:admin@hashactory.ru'>admin@hashactory.ru</a></p>");
+//        builder.append("<p>Телефон 8 800 100 5979 (по России бесплатно)</p></td></tr></table>");
+//
+//        mailService.send(name, mail, "Мы с вами свяжемся!", builder.toString());
+//
 
         return "redirect:/";
     }

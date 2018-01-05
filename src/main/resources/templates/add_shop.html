@@ -11,18 +11,17 @@
     <!-- Bootstrap core CSS -->
     <link href="/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="/dist/css/bootstrap-toggle.css" rel="stylesheet">
-    <style>
-        #map {
-            height: 400px;
-            width: 100%;
-        }
-    </style>
+    <!--<style>-->
+    <!--#map {-->
+    <!--height: 400px;-->
+    <!--width: 100%;-->
+    <!--}-->
+    <!--</style>-->
 </head>
 <body>
 
 <div class="container">
     <div class="row">
-
 
 
         <form method="post" name="shop_form" id="shop_form" action="/add_shop" role="form">
@@ -36,43 +35,44 @@
                 <label for="wallet">Wallet</label>
                 <input class="form-control" id="wallet" name="wallet" required/>
                 <br/>
-                <label for="typeItem">Раздел</label>
+                <label for="typeItem">Type</label>
                 <select id="typeItem" name="typeItem" class="form-control">
-                    <option>Кафе</option>
-                    <option>Ресторан</option>
-                    <option>Магазин</option>
-                    <option>Прокат</option>
-                    <option>Услуги</option>
-                </select><br/>
+                    <option data-th-each="type : ${types}"><b th:text="${type.title}"></b></option>
+                </select>
+                <br/>
                 <div id="map"></div>
                 <br/>
-                <label for="address">address</label>
+                <label for="address">Address</label>
 
-                <div class="input-group">
-                    <input class="form-control" id="address" name="address" required/>
-                    <span class="input-group-btn">
-                      <button class="btn btn-default" type="button" onclick="codeAddress()">Map</button>
-                        </span>
-                </div><!-- /input-group -->
+                <!--<div class="input-group">-->
+                    <input class="form-control"  onchange="codeAddress()" id="address" name="address" required on/>
+                    <!--<span class="input-group-btn">-->
+                      <!--<button class="btn btn-default" type="button" >Map</button>-->
+                        <!--</span>-->
+                <!--</div>&lt;!&ndash; /input-group &ndash;&gt;-->
 
                 <br/>
-                <label for="addaddress">addition address</label>
-                <input class="form-control" id="addaddress" name="addaddress"
-                       />
-                <input  type="hidden" class="form-control" id="latitude"
+                <label for="addaddress">Addition address</label>
+                <input class="form-control" id="addaddress" name="addaddress"/>
+                <br/>
+                <label for="tel">Phone number</label>
+                <input class="form-control" id="tel" name="tel"/>
+                <br/>
+                <label for="site">Site page</label>
+                <input class="form-control" id="site" name="site"/>
+                <br/>
+                <label for="email">Email</label>
+                <input class="form-control" id="email" name="email"/>
+                <input type="hidden" class="form-control" id="latitude"
                        name="latitude"/>
-                <input type="hidden"  class="form-control" id="longitude"
+                <input type="hidden" class="form-control" id="longitude"
                        name="longitude"/>
             </div>
-            <button type="submit" id="submit" class="btn btn-primary">Добавить</button>
+            <button type="submit" id="submit"  onclick="codeAddress()" class="btn btn-primary">Add advert</button>
         </form>
 
 
-
-
-
-
-</div>
+    </div>
 </div>
 
 </body>

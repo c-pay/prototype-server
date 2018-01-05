@@ -17,6 +17,9 @@
 
     <!-- Custom styles for this template -->
     <link href="/dist/css/justified-nav.css" rel="stylesheet">
+    <script src="/dist/js/jquery.min.js"></script>
+    <script src="/dist/js/bootstrap.min.js"></script>
+    <script src="/dist/js/docs.min.js"></script>
 
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]>
@@ -38,7 +41,10 @@
         <div class="col-md-2 col-sm-2"></div>
         <div class="col-md-8 col-sm-8">
             <a href="/">&larr; main page</a>
-
+            <br/>
+            <a href="/list_type">&rarr; edit type</a>
+            <br/>
+            <a href="/help">&rarr; help</a>
             <br/><br/>
             <table class="table table-striped" id="posts_list">
                 <thead>
@@ -53,22 +59,55 @@
                 <tr data-th-each="advert : ${adverts}">
                     <td class="message" data-th-text="${advert.title}"></td>
                     <td class="message" data-th-text="${advert.wallet}"></td>
-                    <td class="message"><a th:href="'edit_shop/'+${advert.id}" ><span class="glyphicon glyphicon-edit"></span></a></td>
-                    <td class="message"><a th:href="'remove_shop/'+${advert.id}" ><span class="glyphicon glyphicon-floppy-remove"></span></a></td>
+                    <td class="message"><a th:href="'edit_shop/'+${advert.id}"><span
+                            class="glyphicon glyphicon-edit"></span></a></td>
+                    <!--<td class="message"><a th:href="'remove_shop/'+${advert.id}"  data-toggle="modal" data-target="#mailModal"><span class="glyphicon glyphicon-floppy-remove"></span></a></td>-->
+                    <td class="message"><a href="#" th:onclick="'show('+${advert.id}+')'"><span
+                            class="glyphicon glyphicon-floppy-remove"></span></a></td>
                 </tr>
                 </tbody>
             </table>
             <br/>
 
-            <a class="btn btn-success pull-right" href="/add_shop" role="button">Добавить магазин</a><br/>
+            <a class="btn btn-success pull-right" href="/add_shop" role="button">Add advert</a><br/>
         </div>
     </div>
 
 </div> <!-- /container -->
 
+<div id="infoModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title text-center">Warning</h2><br/>
+            </div>
+            <div class="modal-body">
+                <h4 class="modal-title text-center">Delete shop?</h4><br/>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning btn-left" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-success btn-right" onclick="confirm()" type="button" data-dismiss="modal">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
+<script>
+    var pos;
+
+    function show(id) {
+        pos = id;
+        $('#infoModal').modal('show');
+    }
+
+    function confirm() {
+        if (pos >= 0) {
+            window.location.href="remove_shop/" + pos;
+
+        }
+    }
+</script>
 </body>
 </html>

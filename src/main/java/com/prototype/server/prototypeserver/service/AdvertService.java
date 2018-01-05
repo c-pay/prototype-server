@@ -1,12 +1,10 @@
 package com.prototype.server.prototypeserver.service;
 
-import com.prototype.server.prototypeserver.entity.Advert;
-import com.prototype.server.prototypeserver.entity.Item;
-import com.prototype.server.prototypeserver.entity.Transaction;
-import com.prototype.server.prototypeserver.entity.User;
+import com.prototype.server.prototypeserver.entity.*;
 import com.prototype.server.prototypeserver.repository.AdvertRepository;
 import com.prototype.server.prototypeserver.repository.ItemRepository;
 import com.prototype.server.prototypeserver.repository.TransactionRepository;
+import com.prototype.server.prototypeserver.repository.TypeItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -38,8 +36,27 @@ public class AdvertService {
     @Autowired
     private ItemRepository itemRepository;
 
+    @Autowired
+    private TypeItemRepository typeItemRepository;
+
     public List<Advert> findAll(){
         return advertRepository.findAll();
+    }
+
+    public List<TypeItem> findAllTypeItem(){
+        return typeItemRepository.findAll();
+    }
+
+    public TypeItem findTypeItemByTitle(String title){
+        return typeItemRepository.findByTitle(title);
+    }
+
+    public TypeItem findTypeItemById(long id){
+        return typeItemRepository.findById(id);
+    }
+
+    public TypeItem saveTypeItem(TypeItem typeItem){
+        return typeItemRepository.save(typeItem);
     }
 
     public void removeItem(Item item){
@@ -113,6 +130,12 @@ public class AdvertService {
         return advertRepository.findAllByUser(user);
 
     }
+
+    public Advert findFirstByWallet(String wallet){
+        return advertRepository.findFirstByWallet(wallet.trim());
+
+    }
+
     public Advert saveAdvert(Advert advert){
         return advertRepository.saveAndFlush(advert);
     }

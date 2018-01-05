@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+
+    <title>CPay market</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/dist/css/justified-nav.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]>
+    <script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-md-2 col-sm-2"></div>
+        <div class="col-md-8 col-sm-8">
+            <br/>
+            <a href="/list_type">&larr; list page</a>
+            <br/><br/>
+            <div class="text-center"><img th:src="'/image_type/'+${type.id}" ></div>
+            <br/>
+
+            <form method="POST" enctype="multipart/form-data" action="/upload_type">
+                <div class="pull-center">
+                    <input class="form-control" type="hidden" id="id" name="id" th:value="${type.id}" required/>
+                    <input type="file" name="file" class="btn btn-mini  btn-primary"
+                           style="display:inline; padding: 2px 1px;"/>
+                    <input type="submit" class="btn btn-mini  btn-primary" style="padding: 2px 3px;"
+                           value="&#128190;"/></div>
+                <br/><br/>
+            </form>
+            <br/>
+            <form method="post" name="shop_form" id="shop_form" action="/update_type" role="form">
+                <div class="form-group">
+                    <input type="hidden" th:value="${type.id}" class="form-control" id="id" name="id" required/>
+                    <label for="title">Title</label>
+                    <input th:value="${type.title}" class="form-control" id="title" name="title" required/>
+                    <br/>
+                </div>
+                <button type="submit" id="submit" class="btn btn-primary pull-right">Update type</button>
+                <br/>
+            </form>
+
+        </div>
+
+    </div>
+
+</div> <!-- /container -->
+
+
+</body>
+</html>

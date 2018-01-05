@@ -11,7 +11,11 @@
     <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
 
     <title>CPay market</title>
-
+    <!-- Custom styles for this template -->
+    <link href="/dist/css/justified-nav.css" rel="stylesheet">
+    <script src="/dist/js/jquery.min.js"></script>
+    <script src="/dist/js/bootstrap.min.js"></script>
+    <script src="/dist/js/docs.min.js"></script>
     <!-- Bootstrap core CSS -->
     <link href="/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -27,12 +31,12 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <style>
-        #map {
-            height: 400px;
-            width: 100%;
-        }
-    </style>
+    <!--<style>-->
+        <!--#map {-->
+            <!--height: 400px;-->
+            <!--width: 100%;-->
+        <!--}-->
+    <!--</style>-->
 </head>
 
 <body>
@@ -72,45 +76,57 @@
                     <label for="wallet">Wallet</label>
                     <input th:value="${advert.wallet}" class="form-control" id="wallet" name="wallet" required/>
                     <br/>
-                    <label for="typeItem">Раздел</label>
-                    <select id="typeItem" name="typeItem" class="form-control">
-                        <option>Кафе</option>
-                        <option>Ресторан</option>
-                        <option>Магазин</option>
-                        <option>Прокат</option>
-                        <option>Услуги</option>
-                    </select><br/>
+
+                    <label for="typeItem">Type</label>
+                    <select id="typeItem" name="typeItem" class="form-control" th:field="*{advert.typeItem}">
+                        <option th:each="type : ${types}"
+                                th:value="${type.id}"
+                                th:text="${type.title}"
+                                th:selected="${advert.typeItem!=null && advert.typeItem.id == type.id}">
+                        </option>
+                    </select>
+                    <br/>
                     <div id="map"></div>
                     <br/>
                     <label for="address">address</label>
 
-                    <div class="input-group">
-                        <input th:value="${advert.address}" class="form-control" id="address" name="address" required/>
-                        <span class="input-group-btn">
-                      <button class="btn btn-default" type="button" onclick="codeAddress()">Map</button>
-                        </span>
-                    </div><!-- /input-group -->
+                    <!--<div class="input-group">-->
+                        <input th:value="${advert.address}"  onchange="codeAddress()" class="form-control" id="address" name="address" required/>
+                        <!--<span class="input-group-btn">-->
+                      <!--<button class="btn btn-default" type="button">Map</button>-->
+                        <!--</span>-->
+                    <!--</div>&lt;!&ndash; /input-group &ndash;&gt;-->
 
                     <br/>
-                    <label for="addaddress">addition address</label>
-                    <input th:value="${advert.addAddress}" class="form-control" id="addaddress" name="addaddress"
-                          />
+                    <label for="addaddress">Addition address</label>
+                    <input th:value="${advert.address}" class="form-control" id="addaddress" name="addaddress"/>
+                    <br/>
+
+                    <label for="tel">Phone number</label>
+                    <input th:value="${advert.tel}" class="form-control" id="tel" name="tel"/>
+                    <br/>
+                    <label for="site">Site page</label>
+                    <input th:value="${advert.site}" class="form-control" id="site" name="site"/>
+                    <br/>
+                    <label for="email">Email</label>
+                    <input th:value="${advert.email}" class="form-control" id="email" name="email"/>
+
                     <input type="hidden" th:value="${advert.latitude}" class="form-control" id="latitude"
                            name="latitude"/>
                     <input type="hidden" th:value="${advert.longitude}" class="form-control" id="longitude"
                            name="longitude"/>
-                </div>
-
-                <button type="submit" id="submit" class="btn btn-primary pull-right">Save</button>
+                </div><br/>
+                <button type="submit" id="submit" class="btn btn-primary pull-right">Save advert</button>
+                <br/>
             </form>
-
+            <br/><br/>
 
             <table class="table table-striped" id="posts_list">
                 <thead>
                 <tr>
                     <th>Product</th>
                     <th>Price</th>
-                    <th>cc€</th>
+                    <th>Currency</th>
                     <th><span class="glyphicon glyphicon-edit"></span></th>
                     <th><span class="glyphicon glyphicon-floppy-remove"></span></th>
                 </tr>
@@ -118,8 +134,8 @@
                 <tbody>
                 <tr data-th-each="item : ${items}">
                     <td class="message" data-th-text="${item.title}"></td>
-                    <td class="message" data-th-text="${item.price}"></td>
-                    <td>cc€</td>
+                    <td class="message" data-th-text="${item.priceCurrency}"></td>
+                    <td>euro</td>
                     <td class="message"><a th:href="'/add_item/'+${advert.id}+'/'+${item.id}"><span
                             class="glyphicon glyphicon-edit"></span></a></td>
                     <td class="message"><a th:href="'/remove_item/'+${advert.id}+'/'+${item.id}"><span
@@ -128,7 +144,7 @@
                 </tbody>
             </table>
             <br/><br/>
-            <a class="btn btn-primary pull-right" th:href="'/add_item/'+${advert.id}+'/0'">Добавить</a>
+            <a class="btn btn-primary pull-right" th:href="'/add_item/'+${advert.id}+'/0'">Add product</a>
             <br/><br/>
             <br/><br/>
             <br/><br/>
@@ -137,10 +153,51 @@
     </div>
 
 </div> <!-- /container -->
+<div id="infoModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title text-center">Warning</h2><br/>
+            </div>
+            <div class="modal-body">
+                <h4 class="modal-title text-center">Delete Item?</h4><br/>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning btn-left" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-success btn-right" onclick="confirm()" type="button" data-dismiss="modal">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
+<script>
+    var pos;
+    var advert_pos;
+
+    function show(advert_id, id) {
+        pos = id;
+        advert_pos = advert_id;
+        $('#infoModal').modal('show');
+    }
+
+    function confirm() {
+        if (pos >= 0) {
+
+            $.ajax({
+                type: 'GET',
+                url: '/remove_item' + advert_pos + '/' + pos,
+
+                success: function(content) {
+                }
+            });
+            return false; // to stop link
+//            window.location.href="/remove_item/" + advert_pos + "/" + pos;
+
+        }
+    }
+</script>
 </body>
 <script src="/dist/js/map.js"></script>
 <script async defer

@@ -21,6 +21,8 @@ public class Item {
     @Column(name="title", length = 150, nullable = false)
     private String title;
     private float price;
+    @Column(name="price_currency")
+    private float priceCurrency;
     @JsonIgnore
     @ManyToOne
     @Cascade(value = {org.hibernate.annotations.CascadeType.DELETE})

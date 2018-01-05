@@ -1,18 +1,16 @@
 package com.prototype.server.prototypeserver.controller.rest;
 
-import com.prototype.server.prototypeserver.entity.Advert;
-import com.prototype.server.prototypeserver.entity.Item;
-import com.prototype.server.prototypeserver.entity.Role;
-import com.prototype.server.prototypeserver.entity.User;
+import com.prototype.server.prototypeserver.entity.*;
 import com.prototype.server.prototypeserver.service.AdvertService;
+import com.prototype.server.prototypeserver.service.CryptoService;
 import com.prototype.server.prototypeserver.service.UserService;
+import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -20,9 +18,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Controller
@@ -30,7 +32,8 @@ import java.util.List;
 @SessionAttributes("user")
 public class WebController {
 
-
+    @Autowired
+    private CryptoService cryptoService;
     @Autowired
     private AdvertService advertService;
     @Autowired
@@ -59,6 +62,7 @@ public class WebController {
         advertService.findByAdvert(1);
         modelAndView.setViewName("index");
         modelAndView.addObject("adverts", advertService.findAll());
+        modelAndView = cryptoService.getCurrencyForPage(modelAndView);
         return modelAndView;
     }
 
@@ -115,6 +119,9 @@ public class WebController {
             return modelAndView;
         }
         List<Item> items = advertService.findByAdvert(advert.getId());
+        List<TypeItem> types = advertService.findAllTypeItem();
+
+        modelAndView.addObject("types", types);
         modelAndView.addObject("advert", advert);
         modelAndView.addObject("items", items);
         modelAndView.setViewName("edit_shop");
@@ -125,14 +132,21 @@ public class WebController {
     @RequestMapping(value = "/add_shop", method = RequestMethod.GET)
     public ModelAndView addShop() {
         ModelAndView modelAndView = new ModelAndView();
+        List<TypeItem> types = advertService.findAllTypeItem();
+        modelAndView.addObject("types", types);
         modelAndView.setViewName("add_shop");
+
         return modelAndView;
     }
 
     @RequestMapping(value = "/add_shop", method = RequestMethod.POST)
     public ModelAndView addShop(@SessionAttribute User user, @RequestParam String title, @RequestParam String description, @RequestParam String wallet
-            ,@RequestParam String address, @RequestParam String addaddress, @RequestParam Double latitude, @RequestParam Double longitude) {
+            , @RequestParam String address, @RequestParam String addaddress
+            , @RequestParam Double latitude, @RequestParam Double longitude, @RequestParam String typeItem,
+            @RequestParam String tel, @RequestParam String site, @RequestParam String email) {
         Advert advert = new Advert();
+        TypeItem type = advertService.findTypeItemByTitle(typeItem);
+        advert.setTypeItem(type);
         advert.setTitle(title);
         advert.setDescription(description);
         advert.setWallet(wallet);
@@ -141,6 +155,9 @@ public class WebController {
         advert.setAddAddress(addaddress);
         advert.setLatitude(latitude);
         advert.setLongitude(longitude);
+        advert.setTel(tel);
+        advert.setSite(site);
+        advert.setEmail(email);
         Advert save = advertService.saveAdvert(advert);
         ModelAndView modelAndView = new ModelAndView();
         if (save != null) {
@@ -166,12 +183,14 @@ public class WebController {
         }
         modelAndView.addObject("id", id);
         modelAndView.addObject("item", item);
+        modelAndView.addObject("eth", cryptoService.getCurrency("ETH"));
         modelAndView.setViewName("add_item");
         return modelAndView;
     }
 
     @RequestMapping(value = "/add_item", method = RequestMethod.POST)
-    public String addItem(@SessionAttribute User user, @RequestParam String title, @RequestParam String price, @RequestParam long id, @RequestParam long id_item) {
+    public String addItem(@SessionAttribute User user, @RequestParam String title,
+    @RequestParam String price, @RequestParam String priceCurrency, @RequestParam long id, @RequestParam long id_item) {
         boolean admin = user.getRoles().contains(new Role("ADMIN"));
         Advert advert = advertService.findAdvertById(id);
         if (advert == null) return "redirect:/";
@@ -180,6 +199,7 @@ public class WebController {
         if (item == null) item = new Item();
         item.setAdvert(advert);
         item.setTitle(title);
+        item.setPriceCurrency(Float.parseFloat(priceCurrency));
         item.setPrice(Float.parseFloat(price));
         advertService.saveItem(item);
         return "redirect:/edit_shop/" + id;
@@ -217,12 +237,8 @@ public class WebController {
             try {
                 byte[] bytes = file.getBytes();
                 Advert advert = advertService.findAdvertById(id);
-
                 advert.setPic(bytes);
-
-
                 advertService.saveAdvert(advert);
-
             } catch (Exception e) {
                 return "redirect:/";
             }
@@ -232,22 +248,130 @@ public class WebController {
 
     @RequestMapping(value = "/update_shop", method = RequestMethod.POST)
     public ModelAndView updateShop(@SessionAttribute User user, @RequestParam long id, @RequestParam String title, @RequestParam String description, @RequestParam String wallet
-    ,@RequestParam String address, @RequestParam String addaddress, @RequestParam Double latitude, @RequestParam Double longitude) {
+            , @RequestParam String address, @RequestParam String addaddress, @RequestParam Double latitude,
+            @RequestParam Double longitude, @RequestParam String typeItem,
+            @RequestParam String tel, @RequestParam String site, @RequestParam String email) {
         Advert advert = advertService.findAdvertById(id);
+        TypeItem type = advertService.findTypeItemById(Long.parseLong(typeItem));
+
         ModelAndView modelAndView = new ModelAndView("redirect:/edit_shop/" + id);
         boolean admin = user.getRoles().contains(new Role("ADMIN"));
         if (advert.getUser().getEmail().equals(user.getEmail()) || admin) {
             advert.setTitle(title);
+            advert.setTypeItem(type);
             advert.setDescription(description);
             advert.setWallet(wallet);
             advert.setAddress(address);
             advert.setAddAddress(addaddress);
             advert.setLatitude(latitude);
             advert.setLongitude(longitude);
+            advert.setTel(tel);
+            advert.setSite(site);
+            advert.setEmail(email);
             advertService.saveAdvert(advert);
         }
         return modelAndView;
     }
 
 
+
+    @RequestMapping(value = "/list_type", method = RequestMethod.GET)
+    public ModelAndView listType(Authentication authentication) {
+
+        User user = getPrincipalUser();
+        ModelAndView modelAndView = new ModelAndView();
+        boolean admin = user.getRoles().contains(new Role("ADMIN"));
+        if (!admin) {
+            modelAndView.setViewName("redirect:/");
+            return modelAndView;
+        }
+        modelAndView.addObject("types", advertService.findAllTypeItem());
+        modelAndView.setViewName("list_type");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/add_type", method = RequestMethod.GET)
+    public ModelAndView addType() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("add_type");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/add_type", method = RequestMethod.POST)
+    public String addItem(@SessionAttribute User user, @RequestParam String title) {
+        boolean admin = user.getRoles().contains(new Role("ADMIN"));
+
+        if (!admin) return "redirect:/";
+        TypeItem type = advertService.findTypeItemByTitle(title);
+        if (type != null) return "redirect:/list_type";
+        advertService.saveTypeItem(new TypeItem(title));
+        return "redirect:/list_type";
+    }
+
+    @RequestMapping(value = "/edit_type/{id}", method = RequestMethod.GET)
+    public ModelAndView editType(@SessionAttribute User user, @PathVariable long id) {
+
+        ModelAndView modelAndView = new ModelAndView();
+        boolean admin = user.getRoles().contains(new Role("ADMIN"));
+
+        if (!admin) {
+            modelAndView.setViewName("redirect:/");
+            return modelAndView;
+        }
+
+        modelAndView.addObject("type", advertService.findTypeItemById(id));
+        modelAndView.setViewName("edit_type");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/update_type", method = RequestMethod.POST)
+    public ModelAndView updateType(@SessionAttribute User user, @RequestParam long id, @RequestParam String title) {
+
+        ModelAndView modelAndView = new ModelAndView("redirect:/list_type");
+        boolean admin = user.getRoles().contains(new Role("ADMIN"));
+        if (!admin) {
+            modelAndView.setViewName("redirect:/");
+            return modelAndView;
+        }
+        TypeItem type = advertService.findTypeItemById(id);
+        type.setTitle(title);
+        advertService.saveTypeItem(type);
+        return modelAndView;
+    }
+
+
+    //TODO: сделать универсальную функцию загрузи и чтения картинок
+    @RequestMapping(value = "/upload_type", method = RequestMethod.POST)
+    public String handleFileUploadType(@RequestParam("file") MultipartFile file, @RequestParam("id") long id) {
+        if (!file.isEmpty()) {
+            try {
+                byte[] bytes = file.getBytes();
+                TypeItem type = advertService.findTypeItemById(id);
+                type.setPic(bytes);
+                advertService.saveTypeItem(type);
+            } catch (Exception e) {
+                return "redirect:/list_type";
+            }
+        }
+        return "redirect:/list_type";
+    }
+
+    @RequestMapping(value = "/image_type/{image_id}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getImageType(@PathVariable("image_id") long imageId) throws IOException {
+        byte[] imageContent = null;
+
+        imageContent = advertService.findTypeItemById(imageId).getPic();
+
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+        return new ResponseEntity<byte[]>(imageContent, headers, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/help", method = RequestMethod.GET)
+    public ModelAndView help() {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("help");
+        return modelAndView;
+    }
 }

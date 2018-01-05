@@ -33,7 +33,19 @@
 <div class="container">
 
     <div class="masthead">
-        <h3 class="text-muted">Project name</h3>
+        <h3 class="text-muted">CPay market
+            <b class="text-right">
+                <!--<a target="_blank" href="https://coinmarketcap.com/currencies/bitcoin/"><b>-->
+                <!--<output th:text="${btc}" th:style="(${btc_rise}?'color:green;':'color:red;')+'padding-top:0px'">-->
+                <!--BTC - 0.0$-->
+                <!--</output>-->
+                <!--</b></a>-->
+                <a target="_blank" href="https://coinmarketcap.com/currencies/ethereum/"><b>
+                    <output th:text="${eth}" th:style="(${eth_rise}?'color:green;':'color:red;')+'padding-top:0px'" >
+                        ETH - 0.0EUR
+                    </output>
+                </b></a>
+            </b></h3>
         <ul class="nav nav-justified">
             <li><a href="/">Home</a></li>
             <li  class="active"><a href="/download">Downloads</a></li>

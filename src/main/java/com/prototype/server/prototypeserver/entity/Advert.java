@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.List;
@@ -26,7 +27,8 @@ public class Advert {
     @JsonIgnore
     @ManyToOne
     private User user;
-
+    @ManyToOne
+    private TypeItem typeItem;
     @JsonIgnore
     @OneToMany(mappedBy = "advert", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Item> items;
@@ -42,4 +44,11 @@ public class Advert {
     private double latitude;
     @Column(name="longitude" , nullable = true)
     private double longitude;
+
+    @Column(name="tel" , length = 15, nullable = true)
+    private String tel;
+    @Column(name="site" , length = 150, nullable = true)
+    private String site;
+    @Column(name="email" , length = 150, nullable = true)
+    private String email;
 }

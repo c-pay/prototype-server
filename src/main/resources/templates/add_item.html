@@ -7,7 +7,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="/dist/js/bootstrap.min.js"></script>
     <script src="/dist/js/bootstrap-toggle.js"></script>
-    <script src="/assets/js/docs.min.js"></script>
+    <script src="/dist/js/docs.min.js"></script>
     <!-- Bootstrap core CSS -->
     <link href="/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="/dist/css/bootstrap-toggle.css" rel="stylesheet">
@@ -16,7 +16,8 @@
 
 <div class="container">
     <div class="row">
-
+        <br/>
+        <a href="/list_shop">&larr; list</a><br/><br/>
         <form method="post" name="shop_form" id="shop_form" action="/add_item" role="form">
             <div class="form-group">
                 <input class="form-control" type="hidden" id="id" name="id" th:value="${id}" required/>
@@ -24,20 +25,32 @@
                 <label for="title">Title</label>
                 <input class="form-control" id="title" name="title" required th:value="${item.title}"/>
                 <br/>
-                <label for="price">price (cc€)</label>
-                <input class="form-control" id="price" name="price" type="number" step="0.001" min="0"  th:value="${item.price}" required/>
+                <label for="priceCurrency">EUR price (1 ETH = <b th:text="${eth}"></b>)</label>
+                <input class="form-control" id="priceCurrency" value="0.00" name="priceCurrency" type="number" step="0.01" min="0"
+                       required onkeyup="calc()"  th:value="${item.priceCurrency}">
+                <input type="hidden" id="eth" th:value="${eth}">
+                    0.00
+                </input>
+                <br/><label for="price">price (eth)</label>
+                <input class="form-control" id="price" name="price" type="number" step="0.00001" min="0"
+                       th:value="${item.price}" required onkeyup="calcEUR()"/>
             </div>
             <button type="submit" id="submit" class="btn btn-primary">Save</button>
         </form>
 
-
-
-
-
-
-</div>
+    </div>
 </div>
 
+<script>
+
+    function calc() {
+        $("#price").val((parseFloat($("#priceCurrency").val())/ parseFloat($("#eth").val())).toFixed(5));
+    }
+
+    function calcEUR() {
+        $("#priceCurrency").val((parseFloat($("#eth").val()) * parseFloat($("#price").val())).toFixed(2));
+    }
+</script>
 
 </body>
 </html>

@@ -40,10 +40,22 @@
 <div class="container">
 
     <div class="masthead">
-        <h3 class="text-muted">Project name</h3>
+        <h3 class="text-muted">CPay market
+            <b class="text-right">
+                <!--<a target="_blank" href="https://coinmarketcap.com/currencies/bitcoin/"><b>-->
+                <!--<output th:text="${btc}" th:style="(${btc_rise}?'color:green;':'color:red;')+'padding-top:0px'">-->
+                <!--BTC - 0.0$-->
+                <!--</output>-->
+                <!--</b></a>-->
+                <a target="_blank" href="https://coinmarketcap.com/currencies/ethereum/"><b>
+                    <output th:text="${eth}" th:style="(${eth_rise}?'color:green;':'color:red;')+'padding-top:0px'" >
+                        ETH - 0.0EUR
+                    </output>
+                </b></a>
+            </b></h3>
         <ul class="nav nav-justified">
             <li><a href="/">Home</a></li>
-            <li><a href="http://localhost:8080/prototype.apk">Downloads</a></li>
+            <li><a href="https://play.google.com/store/apps/details?id=com.cryptopay.prototype">Download Application</a></li>
             <li><a href="/list_shop">Cabinet</a></li>
         </ul>
     </div>
@@ -52,7 +64,8 @@
         <div class="col-md-2 col-sm-2"></div>
         <div class="col-md-8 col-sm-8">
             <br/>
-            <h2 class="text-center" id="title" th:text="${advert.title}"></h2>   <br/><br/>
+            <h2 class="text-center" id="title" th:text="${advert.title}"></h2><br/>
+            <h3 class="text-center" id="typeItem" th:text="${advert.typeItem.title}"></h3>   <br/><br/>
             <div class="pull-center">
                 <label for="wallet">Wallet address</label><br/>
                 <!--th:value="${advert.wallet}"-->
@@ -72,6 +85,13 @@
             <p th:text="'Address: '+${advert.address}"></p>
             <br/>
             <p th:text="'Addition address: '+${advert.addAddress}"></p>
+            <br/>
+            <p th:text="'Phone number: '+${advert.tel}"></p>
+            <br/>
+            <p>Site page: <a th:href="'http://'+${advert.site}" target="_blank" alt="Site page"><b th:text="${advert.site}"></b></a></p>
+            <br/>
+            <p>Email: <a th:href="'mailto:'+${advert.email}" alt="email"><b th:text="${advert.email}"></b></a></p>
+
             <input type="hidden" class="form-control" id="latitude"
                    name="latitude" th:value="${advert.latitude}"/>
             <input type="hidden" class="form-control" id="longitude"
@@ -82,14 +102,14 @@
                 <tr>
                     <th>Product</th>
                     <th>Price</th>
-                    <th>cc€</th>
+                    <th>Currency</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr data-th-each="item : ${items}">
                     <td class="message" data-th-text="${item.title}"></td>
-                    <td class="message" data-th-text="${item.price}"></td>
-                    <td>cc€</td>
+                    <td class="message" data-th-text="${item.priceCurrency}"></td>
+                    <td>euro</td>
                 </tr>
                 </tbody>
             </table>

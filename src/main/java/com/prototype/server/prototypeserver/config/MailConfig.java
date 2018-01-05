@@ -18,11 +18,11 @@ public class MailConfig {
 
     public static void send(String name, String mail, String subject, String body) throws EmailException {
         HtmlEmail email = new HtmlEmail();
-        email.setHostName("smtp.yandex.com");
+        email.setHostName("p347255.mail.ihc.ru");
         email.setSmtpPort(465);
-        email.setAuthenticator(new DefaultAuthenticator("hashfactory@yandex.ru", "1234Zz"));
+        email.setAuthenticator(new DefaultAuthenticator("income@cpay.click", "a123456A"));
         email.setSSLOnConnect(true);
-        email.setFrom("hashfactory@yandex.ru", "HashFactory.ru");
+        email.setFrom("income@cpay.click", "CPay.store");
 
 
         // set the html message

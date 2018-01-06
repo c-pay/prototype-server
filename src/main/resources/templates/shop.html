@@ -48,14 +48,15 @@
                 <!--</output>-->
                 <!--</b></a>-->
                 <a target="_blank" href="https://coinmarketcap.com/currencies/ethereum/"><b>
-                    <output th:text="${eth}" th:style="(${eth_rise}?'color:green;':'color:red;')+'padding-top:0px'" >
+                    <output th:text="${eth}" th:style="(${eth_rise}?'color:green;':'color:red;')+'padding-top:0px'">
                         ETH - 0.0EUR
                     </output>
                 </b></a>
             </b></h3>
         <ul class="nav nav-justified">
             <li><a href="/">Home</a></li>
-            <li><a href="https://play.google.com/store/apps/details?id=com.cryptopay.prototype">Download Application</a></li>
+            <li><a href="https://play.google.com/store/apps/details?id=com.cryptopay.prototype">Download Application</a>
+            </li>
             <li><a href="/list_shop">Cabinet</a></li>
         </ul>
     </div>
@@ -88,7 +89,8 @@
             <br/>
             <p th:text="'Phone number: '+${advert.tel}"></p>
             <br/>
-            <p>Site page: <a th:href="'http://'+${advert.site}" target="_blank" alt="Site page"><b th:text="${advert.site}"></b></a></p>
+            <p>Site page: <a th:href="'http://'+${advert.site}" target="_blank" alt="Site page"><b
+                    th:text="${advert.site}"></b></a></p>
             <br/>
             <p>Email: <a th:href="'mailto:'+${advert.email}" alt="email"><b th:text="${advert.email}"></b></a></p>
 
@@ -97,25 +99,36 @@
             <input type="hidden" class="form-control" id="longitude"
                    name="longitude" th:value="${advert.longitude}"/>
             <br/><br/>
-            <table class="table table-striped" id="posts_list">
-                <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Currency</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr data-th-each="item : ${items}">
-                    <td class="message" data-th-text="${item.title}"></td>
-                    <td class="message" data-th-text="${item.priceCurrency}"></td>
-                    <td>euro</td>
-                </tr>
-                </tbody>
-            </table>
+
+
+            <div th:each="section : ${sections}" class="panel panel-default">
+
+                <div th:text="${section.title}" style="font-weight: bold;" class="panel-heading"></div>
+                <table class="table table-striped" id="posts_list">
+                    <thead>
+                    <tr>
+                        <th width="60%">Product</th>
+                        <th>Price</th>
+                        <th>Currency</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr data-th-each="item : ${items}" th:if="${item.section.id}==${section.id}">
+                        <td class="message" data-th-text="${item.title}"></td>
+                        <td class="message" data-th-text="${item.priceCurrency}"></td>
+                        <td>euro</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br/><br/>
+            <br/><br/>
+            <br/><br/>
             <br/><br/>
         </div>
+
     </div>
+</div>
 
 </div> <!-- /container -->
 
@@ -142,7 +155,7 @@
         marker = new google.maps.Marker({
             position: pos,
             map: map,
-            title:  $("#title").text()
+            title: $("#title").text()
         });
 
 

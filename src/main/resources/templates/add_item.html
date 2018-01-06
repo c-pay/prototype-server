@@ -25,6 +25,15 @@
                 <label for="title">Title</label>
                 <input class="form-control" id="title" name="title" required th:value="${item.title}"/>
                 <br/>
+                <label for="section">Section</label>
+                <select id="section" name="section" class="form-control" th:field="*{item.section}">
+                    <option th:each="section : ${sections}"
+                            th:value="${section.id}"
+                            th:text="${section.title}"
+                            th:selected="${item.section!=null && item.section.id == section.id}">
+                    </option>
+                </select>
+                <br/>
                 <label for="priceCurrency">EUR price (1 ETH = <b th:text="${eth}"></b>)</label>
                 <input class="form-control" id="priceCurrency" value="0.00" name="priceCurrency" type="number" step="0.01" min="0"
                        required onkeyup="calc()"  th:value="${item.priceCurrency}">

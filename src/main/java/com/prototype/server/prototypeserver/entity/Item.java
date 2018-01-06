@@ -25,8 +25,7 @@ public class Item {
     private float priceCurrency;
     @JsonIgnore
     @ManyToOne
-    @Cascade(value = {org.hibernate.annotations.CascadeType.DELETE})
     private Advert advert;
-
-
+    @ManyToOne
+    private Section section;
 }

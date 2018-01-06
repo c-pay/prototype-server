@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+
+    <title>CPay market</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/dist/css/justified-nav.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]>
+    <script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-md-2 col-sm-2"></div>
+        <div class="col-md-8 col-sm-8">
+            <a href="/list_shop">&larr; list page</a>
+            <br/>
+
+            <table class="table table-striped" id="posts_list">
+                <thead>
+                <tr>
+                    <th>Type</th>
+                    <th><span class="glyphicon glyphicon-edit"></span></th>
+                    <!--<th><span class="glyphicon glyphicon-floppy-remove"></span></th>-->
+                </tr>
+                </thead>
+                <tbody>
+                <tr data-th-each="section : ${sections}">
+                    <td class="message" data-th-text="${section.title}"></td>
+                    <td class="message"><a th:href="'add_section/'+${section.id}" ><span class="glyphicon glyphicon-edit"></span></a></td>
+                    <!--<td class="message"><a th:href="'remove_shop/'+${type.id}" ><span class="glyphicon glyphicon-floppy-remove"></span></a></td>-->
+                </tr>
+                </tbody>
+            </table>
+            <br/>
+
+            <a class="btn btn-success pull-right" href="/add_section/0" role="button">Add section</a><br/>
+        </div>
+    </div>
+
+</div> <!-- /container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+</body>
+</html>

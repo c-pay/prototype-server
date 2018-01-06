@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico"/>
+    <title>CPay market</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/dist/js/bootstrap.min.js"></script>
+    <script src="/dist/js/bootstrap-toggle.js"></script>
+    <script src="/dist/js/docs.min.js"></script>
+    <!-- Bootstrap core CSS -->
+    <link href="/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/dist/css/bootstrap-toggle.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <br/>
+        <a href="/list_shop">&larr; list</a><br/><br/>
+        <form method="post" name="shop_form" id="shop_form" action="/add_section" role="form">
+            <div class="form-group">
+                <input class="form-control" type="hidden" id="id" name="id" th:value="${section.id}"/>
+                <label for="title">Title</label>
+                <input class="form-control" id="title" name="title" required th:value="${section.title}"/>
+                <br/>
+            </div>
+            <button type="submit" id="submit" class="btn btn-primary">Save</button>
+        </form>
+
+    </div>
+</div>
+
+
+</body>
+</html>

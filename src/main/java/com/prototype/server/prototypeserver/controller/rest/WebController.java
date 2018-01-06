@@ -24,8 +24,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping
@@ -78,7 +77,19 @@ public class WebController {
         ModelAndView modelAndView = new ModelAndView();
         Advert advert = advertService.findAdvertById(id);
         List<Item> items = advertService.findByAdvert(advert.getId());
+        Set<Section> sections = new TreeSet<>(new Comparator<Section>() {
+            @Override
+            public int compare(Section o1, Section o2) {
+                return o1.getTitle().compareTo(o2.getTitle());
+            }
+        });
+        for (Item item : items) {
+            if(item.getSection()!=null)
+            sections.add(item.getSection());
+        }
+
         modelAndView.addObject("advert", advert);
+        modelAndView.addObject("sections", sections);
         modelAndView.addObject("items", items);
         modelAndView.setViewName("shop");
         return modelAndView;
@@ -121,9 +132,21 @@ public class WebController {
         List<Item> items = advertService.findByAdvert(advert.getId());
         List<TypeItem> types = advertService.findAllTypeItem();
 
+        Set<Section> sections = new TreeSet<>(new Comparator<Section>() {
+            @Override
+            public int compare(Section o1, Section o2) {
+                return o1.getTitle().compareTo(o2.getTitle());
+            }
+        });
+        for (Item item : items) {
+            if(item.getSection()!=null)
+                sections.add(item.getSection());
+        }
+
         modelAndView.addObject("types", types);
         modelAndView.addObject("advert", advert);
         modelAndView.addObject("items", items);
+        modelAndView.addObject("sections", sections);
         modelAndView.setViewName("edit_shop");
         return modelAndView;
     }
@@ -143,7 +166,7 @@ public class WebController {
     public ModelAndView addShop(@SessionAttribute User user, @RequestParam String title, @RequestParam String description, @RequestParam String wallet
             , @RequestParam String address, @RequestParam String addaddress
             , @RequestParam Double latitude, @RequestParam Double longitude, @RequestParam String typeItem,
-            @RequestParam String tel, @RequestParam String site, @RequestParam String email) {
+                                @RequestParam String tel, @RequestParam String site, @RequestParam String email) {
         Advert advert = new Advert();
         TypeItem type = advertService.findTypeItemByTitle(typeItem);
         advert.setTypeItem(type);
@@ -183,22 +206,26 @@ public class WebController {
         }
         modelAndView.addObject("id", id);
         modelAndView.addObject("item", item);
+        modelAndView.addObject("sections", advertService.findAllSection());
         modelAndView.addObject("eth", cryptoService.getCurrency("ETH"));
         modelAndView.setViewName("add_item");
         return modelAndView;
     }
 
     @RequestMapping(value = "/add_item", method = RequestMethod.POST)
-    public String addItem(@SessionAttribute User user, @RequestParam String title,
-    @RequestParam String price, @RequestParam String priceCurrency, @RequestParam long id, @RequestParam long id_item) {
+    public String addItem(@SessionAttribute User user, @RequestParam String title, @RequestParam int section,
+                          @RequestParam String price, @RequestParam String priceCurrency, @RequestParam long id, @RequestParam long id_item) {
         boolean admin = user.getRoles().contains(new Role("ADMIN"));
         Advert advert = advertService.findAdvertById(id);
         if (advert == null) return "redirect:/";
         if (!advert.getUser().getEmail().equals(user.getEmail()) && !admin) return "redirect:/";
         Item item = advertService.findItemById(id_item);
         if (item == null) item = new Item();
+        Section sectionById = advertService.findSectionById(section);
+
         item.setAdvert(advert);
         item.setTitle(title);
+        item.setSection(sectionById);
         item.setPriceCurrency(Float.parseFloat(priceCurrency));
         item.setPrice(Float.parseFloat(price));
         advertService.saveItem(item);
@@ -249,8 +276,8 @@ public class WebController {
     @RequestMapping(value = "/update_shop", method = RequestMethod.POST)
     public ModelAndView updateShop(@SessionAttribute User user, @RequestParam long id, @RequestParam String title, @RequestParam String description, @RequestParam String wallet
             , @RequestParam String address, @RequestParam String addaddress, @RequestParam Double latitude,
-            @RequestParam Double longitude, @RequestParam String typeItem,
-            @RequestParam String tel, @RequestParam String site, @RequestParam String email) {
+                                   @RequestParam Double longitude, @RequestParam String typeItem,
+                                   @RequestParam String tel, @RequestParam String site, @RequestParam String email) {
         Advert advert = advertService.findAdvertById(id);
         TypeItem type = advertService.findTypeItemById(Long.parseLong(typeItem));
 
@@ -272,7 +299,6 @@ public class WebController {
         }
         return modelAndView;
     }
-
 
 
     @RequestMapping(value = "/list_type", method = RequestMethod.GET)
@@ -372,6 +398,63 @@ public class WebController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("help");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/landing", method = RequestMethod.GET)
+    public ModelAndView landing() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("landing");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/list_section", method = RequestMethod.GET)
+    public ModelAndView addSection() {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("sections", advertService.findAllSection());
+        modelAndView.setViewName("list_section");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/add_section/{id}", method = RequestMethod.GET)
+    public ModelAndView addSection(@SessionAttribute User user, @PathVariable int id) {
+
+        ModelAndView modelAndView = new ModelAndView();
+        boolean admin = user.getRoles().contains(new Role("ADMIN"));
+        if (!admin) {
+            modelAndView.setViewName("redirect:/");
+            return modelAndView;
+        }
+        Section section = new Section();
+        if (id != 0) {
+            section = advertService.findSectionById(id);
+        }
+
+        modelAndView.addObject("section", section);
+
+        modelAndView.setViewName("add_section");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/add_section", method = RequestMethod.POST)
+    public ModelAndView addSection(@SessionAttribute User user, @RequestParam int id, @RequestParam String title) {
+        ModelAndView modelAndView = new ModelAndView();
+        boolean admin = user.getRoles().contains(new Role("ADMIN"));
+        if (!admin) {
+            modelAndView.setViewName("redirect:/");
+            return modelAndView;
+        }
+
+        Section section = advertService.findSectionById(id);
+        if (section == null) {
+            section = new Section();
+        }
+        section.setTitle(title);
+        advertService.saveSection(section);
+
+        modelAndView.addObject("sections", advertService.findAllSection());
+        modelAndView.setViewName("list_section");
         return modelAndView;
     }
 }

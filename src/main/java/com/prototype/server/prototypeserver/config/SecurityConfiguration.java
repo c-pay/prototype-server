@@ -113,6 +113,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         , "/savetransaction/**"
                         , "/findallitembyid/**"
                         , "/findalltransactionbyaddress/**"
+                        , "/landing"
                         , "/test");
     }
 

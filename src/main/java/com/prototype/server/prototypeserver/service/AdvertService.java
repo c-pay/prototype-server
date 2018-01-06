@@ -1,10 +1,7 @@
 package com.prototype.server.prototypeserver.service;
 
 import com.prototype.server.prototypeserver.entity.*;
-import com.prototype.server.prototypeserver.repository.AdvertRepository;
-import com.prototype.server.prototypeserver.repository.ItemRepository;
-import com.prototype.server.prototypeserver.repository.TransactionRepository;
-import com.prototype.server.prototypeserver.repository.TypeItemRepository;
+import com.prototype.server.prototypeserver.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -35,7 +32,8 @@ public class AdvertService {
 
     @Autowired
     private ItemRepository itemRepository;
-
+    @Autowired
+    private SectionRepository sectionRepository;
     @Autowired
     private TypeItemRepository typeItemRepository;
 
@@ -148,5 +146,17 @@ public class AdvertService {
     }
     public List<Item> findByAdvertLight(long id){
         return itemRepository.findByAdvertLight(id);
+    }
+
+    public List<Section> findAllSection(){
+        return sectionRepository.findAll();
+    }
+
+    public Section findSectionById(int id){
+        return sectionRepository.findOne(id);
+    }
+
+    public Section saveSection(Section section){
+        return sectionRepository.save(section);
     }
 }

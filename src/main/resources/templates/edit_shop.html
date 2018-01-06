@@ -32,10 +32,10 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     <!--<style>-->
-        <!--#map {-->
-            <!--height: 400px;-->
-            <!--width: 100%;-->
-        <!--}-->
+    <!--#map {-->
+    <!--height: 400px;-->
+    <!--width: 100%;-->
+    <!--}-->
     <!--</style>-->
 </head>
 
@@ -91,10 +91,11 @@
                     <label for="address">address</label>
 
                     <!--<div class="input-group">-->
-                        <input th:value="${advert.address}"  onchange="codeAddress()" class="form-control" id="address" name="address" required/>
-                        <!--<span class="input-group-btn">-->
-                      <!--<button class="btn btn-default" type="button">Map</button>-->
-                        <!--</span>-->
+                    <input th:value="${advert.address}" onchange="codeAddress()" class="form-control" id="address"
+                           name="address" required/>
+                    <!--<span class="input-group-btn">-->
+                    <!--<button class="btn btn-default" type="button">Map</button>-->
+                    <!--</span>-->
                     <!--</div>&lt;!&ndash; /input-group &ndash;&gt;-->
 
                     <br/>
@@ -115,42 +116,49 @@
                            name="latitude"/>
                     <input type="hidden" th:value="${advert.longitude}" class="form-control" id="longitude"
                            name="longitude"/>
-                </div><br/>
+                </div>
+                <br/>
                 <button type="submit" id="submit" class="btn btn-primary pull-right">Save advert</button>
                 <br/>
             </form>
             <br/><br/>
 
-            <table class="table table-striped" id="posts_list">
-                <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Currency</th>
-                    <th><span class="glyphicon glyphicon-edit"></span></th>
-                    <th><span class="glyphicon glyphicon-floppy-remove"></span></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr data-th-each="item : ${items}">
-                    <td class="message" data-th-text="${item.title}"></td>
-                    <td class="message" data-th-text="${item.priceCurrency}"></td>
-                    <td>euro</td>
-                    <td class="message"><a th:href="'/add_item/'+${advert.id}+'/'+${item.id}"><span
-                            class="glyphicon glyphicon-edit"></span></a></td>
-                    <td class="message"><a th:href="'/remove_item/'+${advert.id}+'/'+${item.id}"><span
-                            class="glyphicon glyphicon-floppy-remove"></span></a></td>
-                </tr>
-                </tbody>
-            </table>
-            <br/><br/>
+            <div th:each="section : ${sections}" class="panel panel-default">
+
+                <div th:text="${section.title}" style="font-weight: bold;" class="panel-heading"></div>
+                <table class="table table-striped" id="posts_list">
+                    <thead>
+                    <tr>
+                        <th width="60%">Product</th>
+                        <th>Price</th>
+                        <th>Currency</th>
+                        <th><span class="glyphicon glyphicon-edit"></span></th>
+                        <th><span class="glyphicon glyphicon-floppy-remove"></span></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr data-th-each="item : ${items}" th:if="${item.section.id}==${section.id}">
+                        <td class="message" data-th-text="${item.title}"></td>
+                        <td class="message" data-th-text="${item.priceCurrency}"></td>
+                        <td>euro</td>
+                        <td class="message"><a th:href="'/add_item/'+${advert.id}+'/'+${item.id}"><span
+                                class="glyphicon glyphicon-edit"></span></a></td>
+                        <td class="message"><a th:href="'/remove_item/'+${advert.id}+'/'+${item.id}"><span
+                                class="glyphicon glyphicon-floppy-remove"></span></a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
             <a class="btn btn-primary pull-right" th:href="'/add_item/'+${advert.id}+'/0'">Add product</a>
             <br/><br/>
             <br/><br/>
             <br/><br/>
         </div>
 
+
     </div>
+
+</div>
 
 </div> <!-- /container -->
 <div id="infoModal" class="modal fade">
@@ -189,7 +197,7 @@
                 type: 'GET',
                 url: '/remove_item' + advert_pos + '/' + pos,
 
-                success: function(content) {
+                success: function (content) {
                 }
             });
             return false; // to stop link

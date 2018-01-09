@@ -22,4 +22,5 @@ public class Transaction {
     private String value;
     private String hashTx;
     private String dateTx;
+    private String rate;
 }

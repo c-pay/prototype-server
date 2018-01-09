@@ -40,7 +40,9 @@ public class AdvertService {
     public List<Advert> findAll(){
         return advertRepository.findAll();
     }
-
+//    public List<Advert> findAllLite(){
+//        return advertRepository.findAllLite();
+//    }
     public List<TypeItem> findAllTypeItem(){
         return typeItemRepository.findAll();
     }
@@ -70,13 +72,13 @@ public class AdvertService {
         try {
             // We start by creating a new web3j instance to connect to remote nodes on the network.
             Web3j web3j = Web3j.build(new HttpService(
-                    "https://rinkeby.infura.io/oShbYdHLGQhi0rn1audL"));  // FIXME: Enter your Infura token here;
+                    "https://rinkeby.infura.io/oShbYdHLGQhi0rn1audL"));
             System.out.println("Connected to Ethereum client version: "
                     + web3j.web3ClientVersion().send().getWeb3ClientVersion());
             System.out.println("connect");
             // We then need to load our Ethereum wallet file
 
-            // FIXME: Generate a new wallet file using the web3j command line tools https://docs.web3j.io/command_line.html
+
 //            Resource resource = resourceLoader.getResource("classpath:/path/to/key");
 //            File dbAsFile = resource.getFile();
 //            File file =  new ClassPathResource("static/key").getFile();
@@ -88,7 +90,6 @@ public class AdvertService {
                             new File(homedir, "key"));//TODO заменить на внутренний файл-ключ
             System.out.println("Credentials loaded");
 
-            // FIXME: Request some Ether for the Rinkeby test network at https://www.rinkeby.io/#faucet
 //        log.info("Sending 1 Wei ("
 //                + Convert.fromWei("1", Convert.Unit.ETHER).toPlainString() + " Ether)");
             System.out.println("Sending 1 ETH ("

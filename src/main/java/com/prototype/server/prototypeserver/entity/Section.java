@@ -19,7 +19,6 @@ public class Section {
     private int id;
     @Column(name="title", length = 100, nullable = false)
     private String title;
-
-//    @OneToMany(mappedBy = "section", fetch = FetchType.LAZY)
-//    private List<Item> items;
+    @Lob
+    private byte[] pic;
 }

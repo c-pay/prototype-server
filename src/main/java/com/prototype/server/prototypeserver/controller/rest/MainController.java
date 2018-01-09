@@ -45,6 +45,16 @@ public class MainController {
         return new AdvertDTO(all);
     }
 
+    @RequestMapping(value = "/findalladvert/lite", method = RequestMethod.GET)
+    public AdvertDTO findAllAdvertLite() {
+        List<Advert> all = advertService.findAll();
+        for (int i = 0; i < all.size(); i++) {
+            all.get(i).setPic(null);
+            all.get(i).getTypeItem().setPic(null);
+        }
+        return new AdvertDTO(all);
+    }
+
     @RequestMapping(value = "/getstatus/{address}", method = RequestMethod.GET)
     public String getStatus(String address) {
         return "ok -" + address;
@@ -67,16 +77,18 @@ public class MainController {
         return cryptoService.getCurrency("ETH");
     }
 
-    @RequestMapping(value = "/savetransaction/{from}/{to}/{value}/{hashTx}", method = RequestMethod.GET)
+    @RequestMapping(value = "/savetransaction/{from}/{to}/{value}/{hashTx}/{rate}", method = RequestMethod.GET)
     public void saveTransaction(@PathVariable String from
             , @PathVariable String to
             , @PathVariable String value
-            , @PathVariable String hashTx) {
+            , @PathVariable String hashTx
+    , @PathVariable String rate) {
         Transaction transaction = new Transaction();
         transaction.setFromAddress(from);
         transaction.setToAddress(to);
         transaction.setValue(value);
         transaction.setHashTx(hashTx);
+        transaction.setRate(rate);
         SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
         transaction.setDateTx(formatter1.format(new Date()));
         transactionService.saveTransaction(transaction);
@@ -91,6 +103,7 @@ public class MainController {
             builder.append("<tr><td align=center  colspan='2'><b>PAID</b></td></tr>");
             builder.append("<tr><td>FROM</td><td>" + from + "</td></tr>");
             builder.append("<tr><td>TO</td><td>" + to + "</td></tr>");
+            builder.append("<tr><td>RARE</td><td>" + String.valueOf(rate_eth) + " EURO</td></tr>");
             double result = 0d;
             if(rate_eth!=0d) {
                 result = Double.parseDouble(Convert.fromWei(value, Convert.Unit.ETHER).toPlainString())* rate_eth;
@@ -133,6 +146,16 @@ public class MainController {
     public ItemDTO findallitembyid(@PathVariable long id) {
         List<Item> items = advertService.findByAdvert(id);
 
+        return new ItemDTO(items);
+    }
+
+    @RequestMapping(value = "/findallitembyid/lite/{id}", method = RequestMethod.GET)
+    public ItemDTO findallitembyidLite(@PathVariable long id) {
+        List<Item> items = advertService.findByAdvert(id);
+        for (int i = 0; i < items.size(); i++) {
+            items.get(i).setPic(null);
+            items.get(i).getSection().setPic(null);
+        }
         return new ItemDTO(items);
     }
 

@@ -46,6 +46,19 @@
             </div>
             <button type="submit" id="submit" class="btn btn-primary">Save</button>
         </form>
+        <p><b>150x100</b></p><br/>
+        <div class="text-center"><img th:src="'/image_item/'+${item.id}" ></div>
+        <br/>
+        <form method="POST" enctype="multipart/form-data" action="/upload_item">
+            <div class="pull-center">
+                <input class="form-control" type="hidden" name="id" th:value="${item.id}" required/>
+                <input class="form-control" type="hidden" name="advert_id" th:value="${id}" required/>
+                <input type="file" name="file" class="btn btn-mini  btn-primary"
+                       style="display:inline; padding: 2px 1px;"/>
+                <input type="submit" class="btn btn-mini  btn-primary" style="padding: 2px 3px;"
+                       value="&#128190;"/></div>
+            <br/><br/>
+        </form>
 
     </div>
 </div>

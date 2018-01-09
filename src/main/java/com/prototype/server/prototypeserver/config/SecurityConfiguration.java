@@ -105,7 +105,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         , "/shop/**"
                         , "/image/**"
                         , "/img/**"
-                        , "/findalladvert"
+                        , "/findalladvert/**"
                         , "/findalltype"
                         , "/gettesteth/**"
                         , "/getethprice"

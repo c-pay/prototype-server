@@ -457,4 +457,32 @@ public class WebController {
         modelAndView.setViewName("list_section");
         return modelAndView;
     }
+
+    //TODO: сделать универсальную функцию загрузи и чтения картинок
+    @RequestMapping(value = "/upload_item", method = RequestMethod.POST)
+    public String handleFileUploadItem(@RequestParam("file") MultipartFile file, @RequestParam("id") long id, @RequestParam("advert_id") long advert_id ) {
+        if (!file.isEmpty()) {
+            try {
+                byte[] bytes = file.getBytes();
+                Item item = advertService.findItemById(id);
+                item.setPic(bytes);
+                advertService.saveItem(item);
+            } catch (Exception e) {
+                return "redirect:/add_item/"+advert_id+"/"+id;
+            }
+        }
+
+        return "redirect:/add_item/"+advert_id+"/"+id;
+    }
+
+    @RequestMapping(value = "/image_item/{image_id}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getImageItem(@PathVariable("image_id") long imageId) throws IOException {
+        byte[] imageContent = null;
+
+        imageContent = advertService.findItemById(imageId).getPic();
+
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+        return new ResponseEntity<byte[]>(imageContent, headers, HttpStatus.OK);
+    }
 }

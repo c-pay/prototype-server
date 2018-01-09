@@ -28,4 +28,7 @@ public class Item {
     private Advert advert;
     @ManyToOne
     private Section section;
+
+    @Lob
+    private byte[] pic;
 }

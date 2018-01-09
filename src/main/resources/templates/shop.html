@@ -89,7 +89,7 @@
             <br/>
             <p th:text="'Phone number: '+${advert.tel}"></p>
             <br/>
-            <p>Site page: <a th:href="'http://'+${advert.site}" target="_blank" alt="Site page"><b
+            <p>Site page: <a th:href="''+${advert.site}" target="_blank" alt="Site page"><b
                     th:text="${advert.site}"></b></a></p>
             <br/>
             <p>Email: <a th:href="'mailto:'+${advert.email}" alt="email"><b th:text="${advert.email}"></b></a></p>

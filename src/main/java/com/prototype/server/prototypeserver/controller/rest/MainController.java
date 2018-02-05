@@ -4,15 +4,15 @@ import com.prototype.server.prototypeserver.controller.rest.dto.AdvertDTO;
 import com.prototype.server.prototypeserver.controller.rest.dto.ItemDTO;
 import com.prototype.server.prototypeserver.controller.rest.dto.TransactionDTO;
 import com.prototype.server.prototypeserver.controller.rest.dto.TypeItemDTO;
-import com.prototype.server.prototypeserver.entity.Advert;
-import com.prototype.server.prototypeserver.entity.Item;
-import com.prototype.server.prototypeserver.entity.Transaction;
-import com.prototype.server.prototypeserver.entity.TypeItem;
+import com.prototype.server.prototypeserver.entity.*;
 import com.prototype.server.prototypeserver.service.AdvertService;
 import com.prototype.server.prototypeserver.service.CryptoService;
 import com.prototype.server.prototypeserver.service.MailService;
 import com.prototype.server.prototypeserver.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.web3j.utils.Convert;
@@ -48,7 +48,10 @@ public class MainController {
     @RequestMapping(value = "/findalladvert/lite", method = RequestMethod.GET)
     public AdvertDTO findAllAdvertLite() {
         List<Advert> all = advertService.findAll();
+        System.out.println(all);
+        System.out.println("--------------");
         for (int i = 0; i < all.size(); i++) {
+            System.out.println(all.get(i));
             all.get(i).setPic(null);
             all.get(i).getTypeItem().setPic(null);
         }
@@ -103,7 +106,7 @@ public class MainController {
             builder.append("<tr><td align=center  colspan='2'><b>PAID</b></td></tr>");
             builder.append("<tr><td>FROM</td><td>" + from + "</td></tr>");
             builder.append("<tr><td>TO</td><td>" + to + "</td></tr>");
-            builder.append("<tr><td>RARE</td><td>" + String.valueOf(rate_eth) + " EURO</td></tr>");
+            builder.append("<tr><td>RATE</td><td>" + String.valueOf(rate_eth) + " EURO</td></tr>");
             double result = 0d;
             if(rate_eth!=0d) {
                 result = Double.parseDouble(Convert.fromWei(value, Convert.Unit.ETHER).toPlainString())* rate_eth;
@@ -133,6 +136,13 @@ public class MainController {
 //        transactionService.saveTransaction(transaction);
     }
 
+    @RequestMapping(value = "/saveorder", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Order> saveOrder(@RequestBody Order order){
+
+        order = transactionService.saveOrder(order);
+
+        return new ResponseEntity<Order>(order, HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/findalltransactionbyaddress/{address}", method = RequestMethod.GET)
     public TransactionDTO findalltransactionbyaddress(@PathVariable String address) {

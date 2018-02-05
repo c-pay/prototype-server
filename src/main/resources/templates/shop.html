@@ -110,20 +110,58 @@
                         <th width="60%">Product</th>
                         <th>Price</th>
                         <th>Currency</th>
+                        <th></th>
+                        <th>Amount</th>
+                        <th></th>
+                        <th>Total</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr data-th-each="item : ${items}" th:if="${item.section.id}==${section.id}">
                         <td class="message" data-th-text="${item.title}"></td>
-                        <td class="message" data-th-text="${item.priceCurrency}"></td>
+                        <td class="message" data-th-text="${item.priceCurrency}" th:id="'price'+${item.id}"></td>
+                        <td>euro</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger" th:onclick="'minus('+${item.id}+')'"><b>-</b></button>
+                        </td>
+                        <td style="text-align: center;" th:id="'amount'+${item.id}">0</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" th:onclick="'plus('+${item.id}+')'">+</button>
+                        </td>
+                        <td style="text-align: center;" th:id="'total'+${item.id}">0</td>
                         <td>euro</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
             <br/><br/>
-            <br/><br/>
-            <br/><br/>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="text-left">Your order</h3>
+                    <div class="pull-right">
+                       <a class="btn btn-success" href="https://antx.io/creation" target="_blank"><span class="glyphicon glyphicon-new-window"></span>&nbsp;Create wallet</a>&nbsp;&nbsp;
+                    <a class="btn btn-warning pull-right" href="https://antx.io/recovery" target="_blank"><span class="glyphicon glyphicon-retweet"></span>&nbsp;Recovery wallet</a>&nbsp;&nbsp;</div>&nbsp;&nbsp;<br/><br/>
+                </div>
+                <div class="panel-body">
+                    <div class="pull-right">
+                        <b>Total</b> <b th:id="total">0</b><b> euro</b></div>
+                    <br/>
+                    <div class="pull-right"><b>Ethereum rate</b> <b th:id="rate" th:text="${eth}">0</b><b> euro</b>
+                    </div>
+                    <br/>
+                    <div class="pull-right"><b>Total</b> <b th:id="total_eth">0</b><b> eth</b></div>
+                    <br/>
+                </div>
+                <div class="panel-footer">
+                    <button class="btn btn-primary pull-right" onclick="buy()">
+                        &nbsp;&nbsp;<span class="glyphicon glyphicon-shopping-cart"></span>&nbsp;BUY&nbsp;&nbsp;
+                    </button>
+                    <br/>
+                    <br/>
+                </div>
+            </div>
+
             <br/><br/>
         </div>
 
@@ -157,9 +195,56 @@
             map: map,
             title: $("#title").text()
         });
-
-
     }
+
+    total_amount = 0;
+
+    function minus(id) {
+        price = parseFloat($("#price" + id).html());
+        amount = parseFloat($("#amount" + id).html());
+        amount--;
+
+        total = parseFloat($("#total").text());
+        rate = parseFloat($("#rate").text());
+
+        if (amount >= 0) {
+            $("#amount" + id).html(amount);
+            $("#total" + id).html(amount * price);
+            total -= price;
+            total_amount--;
+            $("#total").text(total);
+            $("#total_eth").text(parseFloat(total / rate).toFixed(2));
+        }
+    }
+
+    function plus(id) {
+        price = parseFloat($("#price" + id).html());
+        amount = parseFloat($("#amount" + id).html());
+        total = parseFloat($("#total").text());
+        rate = parseFloat($("#rate").text());
+        amount++;
+        total_amount++;
+        $("#amount" + id).html(amount);
+        $("#total" + id).html(amount * price);
+        total += price;
+        $("#total").text(total);
+        $("#total_eth").text(parseFloat(total / rate).toFixed(8));
+    }
+
+    function buy() {
+        if (total_amount > 0) {
+            var url = "https://antx.io/trans?"
+                + "shop=" + $("#title").text()
+                + "&number=" + total_amount
+                + "&price=" + $("#total_eth").text()
+                + "&wallet=" + $("#wallet").val()
+                + "&prname=ТОВАР";
+//        console.log(url);
+            window.open(url, '_blank');
+//            $(location).attr('target', '_blank').attr('href', url);
+        }
+    }
+
 </script>
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCysBJYb0rQH-S6MkhknZUu43tROphTw5c&callback=initMap">

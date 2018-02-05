@@ -91,6 +91,7 @@ public class WebController {
         modelAndView.addObject("advert", advert);
         modelAndView.addObject("sections", sections);
         modelAndView.addObject("items", items);
+        modelAndView.addObject("eth", cryptoService.getCurrency("ETH"));
         modelAndView.setViewName("shop");
         return modelAndView;
     }

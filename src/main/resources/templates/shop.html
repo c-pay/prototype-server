@@ -66,6 +66,7 @@
         <div class="col-md-8 col-sm-8">
             <br/>
             <h2 class="text-center" id="title" th:text="${advert.title}"></h2><br/>
+            <input type="hidden" id="id" name="id" th:value="${advert.id}"/>
             <h3 class="text-center" id="typeItem" th:text="${advert.typeItem.title}"></h3>   <br/><br/>
             <div class="pull-center">
                 <label for="wallet">Wallet address</label><br/>
@@ -123,11 +124,11 @@
                         <td class="message" data-th-text="${item.priceCurrency}" th:id="'price'+${item.id}"></td>
                         <td>euro</td>
                         <td>
-                            <button class="btn btn-sm btn-danger" th:onclick="'minus('+${item.id}+')'"><b>-</b></button>
+                            <button class="btn btn-sm btn-danger" th:onclick="'minus('+${item.id}+',\''+${item.title}+'\')'"><b>-</b></button>
                         </td>
                         <td style="text-align: center;" th:id="'amount'+${item.id}">0</td>
                         <td>
-                            <button class="btn btn-sm btn-primary" th:onclick="'plus('+${item.id}+')'">+</button>
+                            <button class="btn btn-sm btn-primary" th:onclick="'plus('+${item.id}+', \''+${item.title}+'\')'">+</button>
                         </td>
                         <td style="text-align: center;" th:id="'total'+${item.id}">0</td>
                         <td>euro</td>
@@ -140,8 +141,8 @@
                 <div class="panel-heading">
                     <h3 class="text-left">Your order</h3>
                     <div class="pull-right">
-                       <a class="btn btn-success" href="https://antx.io/creation" target="_blank"><span class="glyphicon glyphicon-new-window"></span>&nbsp;Create wallet</a>&nbsp;&nbsp;
-                    <a class="btn btn-warning pull-right" href="https://antx.io/recovery" target="_blank"><span class="glyphicon glyphicon-retweet"></span>&nbsp;Recovery wallet</a>&nbsp;&nbsp;</div>&nbsp;&nbsp;<br/><br/>
+                       <a class="btn btn-success" href="http://payment.cpay.store/creation" target="_blank"><span class="glyphicon glyphicon-new-window"></span>&nbsp;Create wallet</a>&nbsp;&nbsp;
+                    <a class="btn btn-warning pull-right" href="http://payment.cpay.store/recovery" target="_blank"><span class="glyphicon glyphicon-retweet"></span>&nbsp;Recovery wallet</a>&nbsp;&nbsp;</div>&nbsp;&nbsp;<br/><br/>
                 </div>
                 <div class="panel-body">
                     <div class="pull-right">
@@ -198,8 +199,9 @@
     }
 
     total_amount = 0;
+    str = "";
 
-    function minus(id) {
+    function minus(id, title) {
         price = parseFloat($("#price" + id).html());
         amount = parseFloat($("#amount" + id).html());
         amount--;
@@ -214,10 +216,13 @@
             total_amount--;
             $("#total").text(total);
             $("#total_eth").text(parseFloat(total / rate).toFixed(2));
+            if(str.indexOf(title.trim())>-1){
+                str = str.replace(', '+title.trim(), '');
+            }
         }
     }
 
-    function plus(id) {
+    function plus(id, title) {
         price = parseFloat($("#price" + id).html());
         amount = parseFloat($("#amount" + id).html());
         total = parseFloat($("#total").text());
@@ -229,16 +234,21 @@
         total += price;
         $("#total").text(total);
         $("#total_eth").text(parseFloat(total / rate).toFixed(8));
+        console.log(str.indexOf(title)==-1);
+        if(str.indexOf(title.trim())==-1){
+            str +=', '+title.trim();
+        }
     }
 
     function buy() {
         if (total_amount > 0) {
-            var url = "https://antx.io/trans?"
+            var url = "http://payment.cpay.store/trans?"
                 + "shop=" + $("#title").text()
                 + "&number=" + total_amount
                 + "&price=" + $("#total_eth").text()
                 + "&wallet=" + $("#wallet").val()
-                + "&prname=ТОВАР";
+                + "&prname="+str.replace(', ', '').trim()
+                + "&shopid="+$("#id").val();
 //        console.log(url);
             window.open(url, '_blank');
 //            $(location).attr('target', '_blank').attr('href', url);

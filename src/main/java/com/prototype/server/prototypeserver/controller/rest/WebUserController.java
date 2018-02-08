@@ -106,7 +106,7 @@ public class WebUserController {
 
             builder.append("<table cellpadding=15 style='margin-top:10px; margin-left:20px;' border='0'>");
             builder.append("<tr><td align=center>Thank you for signing up! Confirm your account to get started.</td></tr>");
-            builder.append("<tr><td align=center><a href='http://95.85.8.20/checkemail?email="+email+"'>CONFIRM</a></td></tr></table>");
+            builder.append("<tr><td align=center><a href='http://cpay.store/checkemail?email="+email+"'>CONFIRM</a></td></tr></table>");
 
             mailService.send(email, email, "Registration completed", builder.toString());
 
@@ -152,7 +152,7 @@ public class WebUserController {
             builder.append("<table cellpadding=15 style='margin-top:10px; margin-left:20px;' border='0'>");
             builder.append("<tr><td align=center ><br/><h2>Восстановление пароля</h2>");
             builder.append("<h3>Вы сделали запрос на восстановление пароля к личному кабинету</h3><br/>");
-            builder.append("<h3>Для продолжения процедуры <a href='http://95.85.8.20/new_password?email=" + email.trim()+"'>Перейти</a></h3><br/>");
+            builder.append("<h3>Для продолжения процедуры <a href='http://cpay.store/new_password?email=" + email.trim()+"'>Перейти</a></h3><br/>");
             builder.append("<h3>Если вы этого неделали, проигнорируйте письмо</h3><br/></td>");
             builder.append("</tr></table>");
 

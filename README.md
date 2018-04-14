@@ -26,4 +26,4 @@ The database behind the web scene in original is MySQL.
 
 You can read, change and setup the credentials or some other configurations here:
 
-`/home/eslider/Projects/cpay/prototype-server/src/main/resources/application.properties`
+`src/main/resources/application.properties`
